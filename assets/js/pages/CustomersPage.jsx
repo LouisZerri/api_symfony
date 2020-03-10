@@ -23,7 +23,8 @@ const CustomersPage = (props) => {
             .then(response => console.log("Ok"))
             .catch(error => {
                 setCustomers(originalCustomers)
-                console.log(error.response)           
+                console.log(error.response)
+           
             })
     }
 
