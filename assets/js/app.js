@@ -7,6 +7,7 @@ import HomePage from './pages/HomePage';
 
 import { HashRouter, Switch, Route } from "react-router-dom";
 import CustomersPage from './pages/CustomersPage';
+import InvoicesPage from "./pages/InvoicesPage";
 
 //Pour les routes : aller du plus détaillé au plus général
 
@@ -19,6 +20,7 @@ const App = () => {
         <main className="container pt-5">
             <Switch>
                 <Route path="/customers" component={CustomersPage}/>
+                <Route path="/invoices" component={InvoicesPage}/>
                 <Route path="/" component={HomePage}/>
             </Switch>
         </main>
