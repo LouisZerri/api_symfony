@@ -9,10 +9,11 @@ import { HashRouter, Switch, Route } from "react-router-dom";
 import CustomersPage from './pages/CustomersPage';
 import InvoicesPage from "./pages/InvoicesPage";
 import LoginPage from "./pages/LoginPage";
+import AuthApi from "./services/authApi";
 
 //Pour les routes : aller du plus détaillé au plus général
 
-
+AuthApi.setup()
 
 const App = () => {
     return <HashRouter>
