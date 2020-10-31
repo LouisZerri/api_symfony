@@ -1,33 +1,53 @@
-import React from 'react';
+import React, {useState} from 'react';
 import ReactDOM from 'react-dom';
 
 import '../css/app.css';
 import Navbar from './components/Navbar';
 import HomePage from './pages/HomePage';
 
-import { HashRouter, Switch, Route } from "react-router-dom";
+import { Redirect, HashRouter, Route, Switch, withRouter } from "react-router-dom";
 import CustomersPage from './pages/CustomersPage';
 import InvoicesPage from "./pages/InvoicesPage";
 import LoginPage from "./pages/LoginPage";
 import AuthApi from "./services/authApi";
+
+import AuthContext from "./contexts/AuthContext";
+import PrivateRoute from "./components/PrivateRoute";
 
 //Pour les routes : aller du plus détaillé au plus général
 
 AuthApi.setup()
 
 const App = () => {
-    return <HashRouter>
-        <Navbar  />
 
-        <main className="container pt-5">
-            <Switch>
-                <Route path="/customers" component={CustomersPage}/>
-                <Route path="/login" component={LoginPage}/>
-                <Route path="/invoices" component={InvoicesPage}/>
-                <Route path="/" component={HomePage}/>
-            </Switch>
-        </main>
-    </HashRouter>
+    const [isAuthenticated, setIsAuthenticated] = useState(AuthApi.isAuthenticated)
+
+    const NavbarWithRouter = withRouter(Navbar)
+
+    const contextValue = {
+        isAuthenticated,
+        setIsAuthenticated
+    }
+
+    return (
+        <AuthContext.Provider value={contextValue}>
+            <HashRouter>
+            <NavbarWithRouter />
+
+            <main className="container pt-5">
+                <Switch>
+                    <PrivateRoute path="/customers" isAuthenticated={isAuthenticated} component={CustomersPage} />
+                    <PrivateRoute path="/invoices" isAuthenticated={isAuthenticated} component={InvoicesPage}/>
+                    <Route
+                        path="/login"
+                        render={props => (<LoginPage onLogin={setIsAuthenticated} {...props} /> )}
+                    />
+                    <Route path="/" component={HomePage}/>
+                </Switch>
+            </main>
+        </HashRouter>
+        </AuthContext.Provider>)
+
 }
 
 const rootElement = document.querySelector('#app');
