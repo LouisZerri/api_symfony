@@ -13,6 +13,7 @@ import AuthApi from "./services/authApi";
 
 import AuthContext from "./contexts/AuthContext";
 import PrivateRoute from "./components/PrivateRoute";
+import CustomerPage from "./pages/CustomerPage";
 
 //Pour les routes : aller du plus détaillé au plus général
 
@@ -36,6 +37,7 @@ const App = () => {
 
             <main className="container pt-5">
                 <Switch>
+                    <PrivateRoute path="/customers/:id" isAuthenticated={isAuthenticated} component={CustomerPage} />
                     <PrivateRoute path="/customers" isAuthenticated={isAuthenticated} component={CustomersPage} />
                     <PrivateRoute path="/invoices" isAuthenticated={isAuthenticated} component={InvoicesPage}/>
                     <Route

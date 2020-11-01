@@ -1,5 +1,6 @@
 import React, {useState} from 'react'
 import AuthApi from "../services/authApi";
+import Field from "../components/forms/Field";
 
 const LoginPage = ({onLogin, history}) => {
 
@@ -34,30 +35,22 @@ const LoginPage = ({onLogin, history}) => {
             <h1>Connexion à votre compte</h1>
 
             <form className="mt-5" onSubmit={handleSubmit}>
-                <div className="form-group">
-                    <label htmlFor="username">Adresse email</label>
-                    <input
-                        type="email"
-                        className="form-control"
-                        placeholder="Adresse email"
-                        name="username"
-                        value={credentials.username}
-                        onChange={handleChange}
-                    />
-                </div>
-                <div className="form-group">
-                    <label htmlFor="password">Mot de passe</label>
-                    <input
-                        type="password"
-                        className="form-control"
-                        placeholder="Mot de passe"
-                        name="password"
-                        value={credentials.password}
-                        onChange={handleChange}
-
-
-                    />
-                </div>
+                <Field
+                    label="Adresse email"
+                    name="username"
+                    value={credentials.username}
+                    onChange={handleChange}
+                    placeholder="Adresse email"
+                    error={error}
+                />
+                <Field
+                    label="Mot de passe"
+                    name="password"
+                    value={credentials.password}
+                    onChange={handleChange}
+                    type="password"
+                    error=""
+                />
                 <div className="form-group">
                     <button type="submit" className="btn btn-success">Connexion</button>
                 </div>
