@@ -1,10 +1,13 @@
-import React, {useState} from 'react'
+import React, {useState, useEffect} from 'react'
 import Field from "../components/forms/Field";
 import {Link} from "react-router-dom";
 import Axios from "axios";
+import CustomersAPI from "../services/customersAPI";
 
 
-const CustomerPage = props => {
+const CustomerPage = ({match, history}) => {
+
+    const { id = 'new' }  = match.params
 
     const [customer, setCustomer] = useState({
         lastname: "",
@@ -19,6 +22,28 @@ const CustomerPage = props => {
         company: ""
     })
 
+    const [editing, setEditing] = useState(false)
+
+    const fetchCustomer = async id =>
+    {
+        try {
+            const {firstname, lastname, email, company} = await CustomersAPI.find(id)
+            setCustomer({firstname, lastname, email, company})
+        }catch (error){
+            console.log(error.response)
+            history.replace("/customers")
+        }
+    }
+
+    useEffect(() => {
+        if(id !== 'new')
+        {
+            setEditing(true)
+            fetchCustomer(id)
+        }
+    }, [id])
+
+
     const handleChange = ({currentTarget}) => {
         const {name, value} = currentTarget
         setCustomer({...customer, [name]: value})
@@ -28,15 +53,24 @@ const CustomerPage = props => {
         event.preventDefault()
 
         try{
-            const response = await Axios.post("http://localhost:8000/api/customers", customer)
+            if(editing)
+            {
+                await CustomersAPI.update(id, customer)
+            }
+            else
+            {
+                await CustomersAPI.create(customer)
+                history.replace("/customers ")
+            }
             setErrors({})
 
-        }catch (error){
-            if(error.response.data.violations)
+        } catch ({response}){
+            const {violations} = response.data
+            if(violations)
             {
                 const apiErrors = {}
-                error.response.data.violations.map(violation => {
-                    apiErrors[violation.propertyPath] = violation.message
+                violations.map(({propertyPath, message}) => {
+                    apiErrors[propertyPath] = message
                 })
 
                 setErrors(apiErrors)
@@ -46,7 +80,7 @@ const CustomerPage = props => {
 
     return(
         <>
-            <h1>Création d'un client</h1>
+            {!editing && <h1>Création d'un client</h1> || <h1>Modification d'un client</h1> }
 
             <form onSubmit={handleSubmit}>
                 <Field name="lastname" label="Nom" laceholder="Nom du client" value={customer.lastname} onChange={handleChange} error={errors.lastname} />

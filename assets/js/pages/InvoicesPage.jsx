@@ -4,6 +4,7 @@ import Axios from "axios";
 import moment from "moment";
 
 import InvoicesAPI from "../services/invoicesAPI"
+import {Link} from "react-router-dom";
 
 const STATUS_CLASSES = {
     PAID: "success",
@@ -82,8 +83,10 @@ const InvoicesPage = (props) => {
 
     return(
         <>
-            <h1>Liste des factures</h1>
-
+            <div className="d-flex justify-content-between align-items-center">
+                <h1>Liste des factures</h1>
+                <Link className="btn btn-primary" to="/invoices/new">Créer une facture</Link>
+            </div>
             <div className="form-group">
                 <input type="text" className="form-control" placeholder="Rechercher un client" onChange={handleSearch} value={search}/>
             </div>
