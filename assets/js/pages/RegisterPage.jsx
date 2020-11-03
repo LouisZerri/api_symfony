@@ -3,6 +3,7 @@ import Field from "../components/forms/Field";
 import {Link} from "react-router-dom";
 import Axios from "axios";
 import UsersApi from "../services/usersApi";
+import {toast} from "react-toastify";
 
 
 const RegisterPage = ({history}) => {
@@ -36,12 +37,15 @@ const RegisterPage = ({history}) => {
         {
             apiErrors.passwordConfirm = "Les deux mots de passe ne correspondent pas"
             setErrors(apiErrors)
+            toast.error("Une erreur est survenue")
             return
         }
 
         try {
             await UsersApi.register(user)
             setErrors({})
+            toast.success("Inscription réussie")
+
             history.replace("/login")
         } catch ({response}){
             const {violations} = response.data
@@ -53,6 +57,8 @@ const RegisterPage = ({history}) => {
 
                 setErrors(apiErrors)
             }
+            toast.error("Une erreur est survenue")
+
         }
 
     }

@@ -16,6 +16,8 @@ import PrivateRoute from "./components/PrivateRoute";
 import CustomerPage from "./pages/CustomerPage";
 import InvoicePage from "./pages/InvoicePage";
 import RegisterPage from "./pages/RegisterPage";
+import {toast, ToastContainer} from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 //Pour les routes : aller du plus détaillé au plus général
 
@@ -35,23 +37,24 @@ const App = () => {
     return (
         <AuthContext.Provider value={contextValue}>
             <HashRouter>
-            <NavbarWithRouter />
+                <NavbarWithRouter />
 
-            <main className="container pt-5">
-                <Switch>
-                    <PrivateRoute path="/customers/:id" isAuthenticated={isAuthenticated} component={CustomerPage} />
-                    <PrivateRoute path="/customers" isAuthenticated={isAuthenticated} component={CustomersPage} />
-                    <PrivateRoute path="/invoices/:id" isAuthenticated={isAuthenticated} component={InvoicePage}/>
-                    <PrivateRoute path="/invoices" isAuthenticated={isAuthenticated} component={InvoicesPage}/>
-                    <Route path="/register" component={RegisterPage} />
-                    <Route
-                        path="/login"
-                        render={props => (<LoginPage onLogin={setIsAuthenticated} {...props} /> )}
-                    />
-                    <Route path="/" component={HomePage}/>
-                </Switch>
-            </main>
-        </HashRouter>
+                <main className="container pt-5">
+                    <Switch>
+                        <PrivateRoute path="/customers/:id" isAuthenticated={isAuthenticated} component={CustomerPage} />
+                        <PrivateRoute path="/customers" isAuthenticated={isAuthenticated} component={CustomersPage} />
+                        <PrivateRoute path="/invoices/:id" isAuthenticated={isAuthenticated} component={InvoicePage}/>
+                        <PrivateRoute path="/invoices" isAuthenticated={isAuthenticated} component={InvoicesPage}/>
+                        <Route path="/register" component={RegisterPage} />
+                        <Route
+                            path="/login"
+                            render={props => (<LoginPage onLogin={setIsAuthenticated} {...props} /> )}
+                        />
+                        <Route path="/" component={HomePage}/>
+                    </Switch>
+                </main>
+            </HashRouter>
+            <ToastContainer position={toast.POSITION.BOTTOM_RIGHT}/>
         </AuthContext.Provider>)
 
 }
