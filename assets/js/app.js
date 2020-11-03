@@ -15,6 +15,7 @@ import AuthContext from "./contexts/AuthContext";
 import PrivateRoute from "./components/PrivateRoute";
 import CustomerPage from "./pages/CustomerPage";
 import InvoicePage from "./pages/InvoicePage";
+import RegisterPage from "./pages/RegisterPage";
 
 //Pour les routes : aller du plus détaillé au plus général
 
@@ -42,6 +43,7 @@ const App = () => {
                     <PrivateRoute path="/customers" isAuthenticated={isAuthenticated} component={CustomersPage} />
                     <PrivateRoute path="/invoices/:id" isAuthenticated={isAuthenticated} component={InvoicePage}/>
                     <PrivateRoute path="/invoices" isAuthenticated={isAuthenticated} component={InvoicesPage}/>
+                    <Route path="/register" component={RegisterPage} />
                     <Route
                         path="/login"
                         render={props => (<LoginPage onLogin={setIsAuthenticated} {...props} /> )}

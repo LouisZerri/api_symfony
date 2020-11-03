@@ -4,8 +4,12 @@ import Select from "../components/forms/Select";
 import {Link} from "react-router-dom";
 import CustomersAPI from "../services/customersAPI";
 import Axios from "axios";
+import InvoicesAPI from "../services/invoicesAPI";
 
-const InvoicePage = ({history}) => {
+
+const InvoicePage = ({history, match}) => {
+
+    const {id = "new"} = match.params
 
     const [invoice, setInvoice] = useState({
         amount: "",
@@ -21,6 +25,8 @@ const InvoicePage = ({history}) => {
 
     const [customers, setCustomers] = useState( [])
 
+    const [editing, setEditing] = useState(false)
+
     const handleChange = ({currentTarget}) => {
         const {name, value} = currentTarget
         setInvoice({...invoice, [name]: value})
@@ -32,7 +38,16 @@ const InvoicePage = ({history}) => {
             setCustomers(data)
             if(!invoice.customer) setInvoice({...invoice, customer: data[0].id})
         }catch (error){
-            console.log(error.response)
+            history.replace("/invoices")
+        }
+    }
+
+    const fetchInvoice = async id => {
+        try {
+            const {amount, status, customer} = await InvoicesAPI.find(id)
+            setInvoice({amount, status, customer: customer.id})
+        } catch (error){
+            history.replace("/invoices")
         }
     }
 
@@ -40,13 +55,27 @@ const InvoicePage = ({history}) => {
         fetchCustomers()
     },[])
 
+    useEffect(() => {
+        if(id !== 'new')
+        {
+            setEditing(true)
+            fetchInvoice(id)
+        }
+    }, [id])
+
     const handleSubmit = async (event) => {
         event.preventDefault()
 
         try {
-            const response = await Axios.post("http://localhost:8000/api/invoices", {...invoice, customer: `/api/customers/${invoice.customer}`})
-            history.replace("/invoices")
-
+            if(editing)
+            {
+               await InvoicesAPI.update(id, invoice)
+            }
+            else
+            {
+                await InvoicesAPI.create(invoice)
+                history.replace("/invoices")
+            }
         } catch ({response}){
             const {violations} = response.data
             if(violations)
@@ -63,7 +92,7 @@ const InvoicePage = ({history}) => {
 
     return(
         <>
-            <h1>Création dune facture</h1>
+            {editing && <h1>Modification d'une facture</h1> || <h1>Création dune facture</h1>}
             <form onSubmit={handleSubmit}>
                 <Field
                     name="amount"

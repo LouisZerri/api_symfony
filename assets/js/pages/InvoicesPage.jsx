@@ -114,7 +114,7 @@ const InvoicesPage = (props) => {
                         </td>
                         <td className="text-center">{invoice.amount.toLocaleString()} €</td>
                         <td>
-                            <button className="btn-sm btn-primary mr-1">Éditer</button>
+                            <Link to={"/invoices/" + invoice.id} className="btn btn-sm btn-primary mr-1">Éditer</Link>
                             <button className="btn-sm btn-danger" onClick={() => handleDelete(invoice.id)}>Supprimer</button>
                         </td>
                     </tr>)}
