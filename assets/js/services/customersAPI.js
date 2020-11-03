@@ -1,30 +1,31 @@
 import Axios from "axios";
+import {CUSTOMERS_API} from "../config";
 
 function findAll()
 {
-    return Axios.get("http://localhost:8000/api/customers")
+    return Axios.get(CUSTOMERS_API)
         .then(response => response.data['hydra:member'])
 }
 
 function find(id)
 {
-    return Axios.get("http://localhost:8000/api/customers/" + id)
+    return Axios.get(CUSTOMERS_API + "/" + id)
         .then(response => response.data)
 }
 
 function create(customer)
 {
-    return Axios.post("http://localhost:8000/api/customers", customer)
+    return Axios.post(CUSTOMERS_API, customer)
 }
 
 function update(id, customer)
 {
-    return Axios.put("http://localhost:8000/api/customers/" + id, customer)
+    return Axios.put(CUSTOMERS_API + "/" + id, customer)
 }
 
 function deleteCustomer(id)
 {
-    return Axios.delete("http://localhost:8000/api/customers/" + id)
+    return Axios.delete(CUSTOMERS_API + "/" + id)
 }
 
 export default {
